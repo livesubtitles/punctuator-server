@@ -15,6 +15,8 @@ MAX_SUBSEQUENCE_LEN = 200
 reverse_word_vocabulary = {}
 reverse_punctuation_vocabulary = {}
 predict = []
+punctuation_vocabulary = []
+word_vocabulary = []
 
 def to_array(arr, dtype=np.int32):
     # minibatch of 1 sequence as column
@@ -124,6 +126,8 @@ def init_punctuator(model_file):
     global reverse_word_vocabulary
     global reverse_punctuation_vocabulary
     global predict
+    global word_vocabulary
+    global punctuation_vocabulary
     x = T.imatrix('x')
     print ("Loading model parameters...")
     net, _ = models.load(model_file, 1, x)
@@ -144,6 +148,8 @@ def punctuate(input_text, model_file):
     global reverse_word_vocabulary
     global reverse_punctuation_vocabulary
     global predict
+    global word_vocabulary
+    global punctuation_vocabulary
 
     #input_text = input()
 
