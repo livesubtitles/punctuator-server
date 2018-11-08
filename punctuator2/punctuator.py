@@ -12,6 +12,9 @@ import theano.tensor as T
 import numpy as np
 
 MAX_SUBSEQUENCE_LEN = 200
+reverse_word_vocabulary = {}
+reverse_punctuation_vocabulary = {}
+predict = []
 
 def to_array(arr, dtype=np.int32):
     # minibatch of 1 sequence as column
@@ -117,42 +120,30 @@ def restore(text, word_vocabulary, reverse_punctuation_vocabulary, predict_funct
 
         i += step
 
-def punctuate(input_text, model_file):
-
-    output_file=""
-    use_pauses = False
-
+def init_punctuator(model_file):
+    global reverse_word_vocabulary
+    global reverse_punctuation_vocabulary
+    global predict
     x = T.imatrix('x')
+    print ("Loading model parameters...")
+    net, _ = models.load(model_file, 1, x)
 
-    if use_pauses:
-
-        p = T.matrix('p')
-
-        print ("Loading model parameters...")
-        net, _ = models.load(model_file, 1, x, p)
-
-        print ("Building model...")
-        predict = theano.function(
-            inputs=[x, p],
-            outputs=net.y
-        )
-
-    else:
-
-        print ("Loading model parameters...")
-        net, _ = models.load(model_file, 1, x)
-
-        print ("Building model...")
-        predict = theano.function(
-            inputs=[x],
-            outputs=net.y
-        )
+    print ("Building model...")
+    predict = theano.function(
+        inputs=[x],
+        outputs=net.y
+    )
 
     word_vocabulary = net.x_vocabulary
     punctuation_vocabulary = net.y_vocabulary
 
     reverse_word_vocabulary = {v:k for k,v in word_vocabulary.items()}
     reverse_punctuation_vocabulary = {v:k for k,v in punctuation_vocabulary.items()}
+
+def punctuate(input_text, model_file):
+    global reverse_word_vocabulary
+    global reverse_punctuation_vocabulary
+    global predict
 
     #input_text = input()
 
@@ -164,7 +155,3 @@ def punctuate(input_text, model_file):
 
     if not use_pauses:
         return restore(text, word_vocabulary, reverse_punctuation_vocabulary, predict)
-    else:
-        if not pauses:
-            pauses = [0.0 for _ in range(len(text)-1)]
-        restore_with_pauses(output_file, text, pauses, word_vocabulary, reverse_punctuation_vocabulary, predict)
