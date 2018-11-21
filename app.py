@@ -37,6 +37,10 @@ def punctuate():
     subtitle = request_body['subtitle']
     return jsonify(subtitle=punctuate_subtitle(subtitle))
 
+@app.route("/oauth")
+def oauth():
+	return send_file('oauth.html')
+
 @app.route("/storeauthcode", methods=['POST'])
 def get_user_access_token_google():
 	auth_code = str(request.data).split("\'")[1]
