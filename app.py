@@ -52,7 +52,7 @@ def get_user_access_token_google():
 	    abort(403)
 	# Set path to the Web application client_secret_*.json file you downloaded from the
 	# Google API Console: https://console.developers.google.com/apis/credentials
-	CLIENT_SECRET_FILE = 'client_secret_1070969009500-r12fqjs9tjj2ts6i59ls5h746vad8tkr.apps.googleusercontent.com.json'
+	CLIENT_SECRET_FILE = 'client_secret_1070969009500-4674ntngjh3dvlbcvoer0r4c7hao04dh.apps.googleusercontent.com.json'
 
 	# Exchange auth code for access token, refresh token, and ID token
 	credentials = client.credentials_from_clientsecrets_and_code(
@@ -64,7 +64,7 @@ def get_user_access_token_google():
 	http = httplib2.Http()
 	http_auth = credentials.authorize(http)
 	resp, content = http.request(
-        'https://www.googleapis.com/auth/cloud-translation/?q=voiture&target=en&source=fr')
+        'https://www.googleapis.com/language/translate/v2/?q=voiture&target=en&source=fr')
 	print(resp.status)
 	print(content.decode('utf-8'))
 	# drive_service = discovery.build('drive', 'v3', http=http_auth)
