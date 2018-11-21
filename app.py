@@ -64,7 +64,7 @@ def get_user_access_token_google():
 	http = httplib2.Http()
 	http_auth = credentials.authorize(http)
 	resp, content = http.request(
-        'https://www.googleapis.com/language/translate/v2/?q=voiture&target=en&source=fr')
+        'https://www.googleapis.com/auth/cloud-translation/?q=voiture&target=en&source=fr')
 	print(resp.status)
 	print(content.decode('utf-8'))
 	# drive_service = discovery.build('drive', 'v3', http=http_auth)
