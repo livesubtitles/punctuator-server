@@ -6,7 +6,7 @@ from punctuate import *
 from punctuator2.punctuator import *
 
 app = Flask(__name__)
-CORS(app, resources={r"/punctuate": {"origins": "*"}})
+CORS(app, resources={r"/punctuate": {"origins": "*"}, "/storeauthcode":{"origins":"*"}})
 
 first_request = True
 
@@ -36,3 +36,36 @@ def punctuate():
     request_body = json.loads(request.data)
     subtitle = request_body['subtitle']
     return jsonify(subtitle=punctuate_subtitle(subtitle))
+
+@app.route("/storeauthcode", methods=['POST'])
+def get_user_access_token_google():
+	auth_code = str(request.data).split("\'")[1]
+	# If this request does not have `X-Requested-With` header, this could be a CSRF
+	if not request.headers.get('X-Requested-With'):
+	    abort(403)
+	# Set path to the Web application client_secret_*.json file you downloaded from the
+	# Google API Console: https://console.developers.google.com/apis/credentials
+	CLIENT_SECRET_FILE = 'client_secret_1070969009500-r12fqjs9tjj2ts6i59ls5h746vad8tkr.apps.googleusercontent.com.json'
+
+	# Exchange auth code for access token, refresh token, and ID token
+	credentials = client.credentials_from_clientsecrets_and_code(
+	    CLIENT_SECRET_FILE,
+	    ['https://www.googleapis.com/auth/drive.appdata', 'profile', 'email'],
+	    auth_code)
+
+	# Call Google API
+	http = httplib2.Http()
+	http_auth = credentials.authorize(http)
+	resp, content = http.request(
+        'https://www.googleapis.com/language/translate/v2/?q=voiture&target=en&source=fr')
+	print(resp.status)
+	print(content.decode('utf-8'))
+	# drive_service = discovery.build('drive', 'v3', http=http_auth)
+	# appfolder = drive_service.files().get(fileId='appfolder').execute()
+
+	# Get profile info from ID token
+	userid = credentials.id_token['sub']
+	email = credentials.id_token['email']
+	print(userid)
+	print(email)
+	return ""
