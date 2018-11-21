@@ -8,6 +8,8 @@ theano = "*"
 flask = "*"
 flask-cors = "*"
 gunicorn = "*"
+oauth2client = "*"
+google-api-python-client = "*"
 
 [dev-packages]
 
