@@ -4,6 +4,8 @@ from flask_cors import CORS
 
 from punctuate import *
 from punctuator2.punctuator import *
+from apiclient import discovery
+from oauth2client import client
 
 app = Flask(__name__)
 CORS(app, resources={r"/punctuate": {"origins": "*"}, "/storeauthcode":{"origins":"*"}})
