@@ -1,4 +1,4 @@
-import httplib2
+# import httplib2
 import json
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
@@ -27,6 +27,9 @@ def prepare_model_file():
     print("Writing second file completed")
     final_file.close()
 
+@app.route("/")
+def index():
+    return "Hello"
 @app.route("/punctuate", methods=['POST'])
 def punctuate():
     global first_request
@@ -61,12 +64,12 @@ def get_user_access_token_google():
 	    auth_code)
 
 	# Call Google API
-	http = httplib2.Http()
-	http_auth = credentials.authorize(http)
-	resp, content = http.request(
-        'https://www.googleapis.com/language/translate/v2/?q=voiture&target=en&source=fr')
-	print(resp.status)
-	print(content.decode('utf-8'))
+	# http = httplib2.Http()
+	# http_auth = credentials.authorize(http)
+	# resp, content = http.request(
+    #     'https://www.googleapis.com/language/translate/v2/?q=voiture&target=en&source=fr')
+	# print(resp.status)
+	# print(content.decode('utf-8'))
 	# drive_service = discovery.build('drive', 'v3', http=http_auth)
 	# appfolder = drive_service.files().get(fileId='appfolder').execute()
 
